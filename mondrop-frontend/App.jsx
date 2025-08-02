@@ -1,46 +1,49 @@
-import React, { useState } from 'react';
-import axios from 'axios';
+import { useState } from 'react';
 
-const App = () => {
+function App() {
   const [address, setAddress] = useState('');
   const [result, setResult] = useState(null);
-  const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
 
   const checkEligibility = async () => {
+    if (!address) return alert('Please enter wallet address');
+    setLoading(true);
+
     try {
-      setError('');
-      setResult(null);
-      const res = await axios.get(`https://your-backend-url/api/check?address=${address}`);
-      setResult(res.data);
+      const res = await fetch(`https://your-backend-url.com/check?address=${address}`);
+      const data = await res.json();
+      setResult(data);
     } catch (err) {
-      setError('Invalid address or server error.');
+      console.error('Error fetching eligibility:', err);
+      setResult({ error: 'Something went wrong. Please try again.' });
     }
+
+    setLoading(false);
   };
 
   return (
-    <div style={{ padding: '2rem', fontFamily: 'Arial' }}>
+    <div style={{ padding: '20px', maxWidth: '600px', margin: 'auto' }}>
       <h1>MonDrop Airdrop Checker</h1>
+
       <input
         type="text"
-        placeholder="Enter your wallet address"
+        placeholder="Enter wallet address"
         value={address}
         onChange={(e) => setAddress(e.target.value)}
-        style={{ padding: '0.5rem', width: '300px' }}
+        style={{ padding: '10px', width: '100%', marginBottom: '10px' }}
       />
-      <button onClick={checkEligibility} style={{ marginLeft: '1rem', padding: '0.5rem 1rem' }}>
-        Check
+
+      <button onClick={checkEligibility} style={{ padding: '10px 20px' }}>
+        {loading ? 'Checking...' : 'Check Eligibility'}
       </button>
 
-      {error && <p style={{ color: 'red' }}>{error}</p>}
-
       {result && (
-        <div style={{ marginTop: '2rem' }}>
-          <h2>Result:</h2>
+        <div style={{ marginTop: '20px', background: '#fff', padding: '15px', borderRadius: '8px' }}>
           <pre>{JSON.stringify(result, null, 2)}</pre>
         </div>
       )}
     </div>
   );
-};
+}
 
 export default App;
