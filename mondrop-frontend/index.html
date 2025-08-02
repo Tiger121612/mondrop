@@ -1,13 +1,26 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>MonDrop Airdrop Checker</title>
-    <link rel="stylesheet" href="/index.css" />
-  </head>
-  <body>
-    <div id="root"></div>
-    <script type="module" src="/main.jsx"></script>
-  </body>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>MonDrop Airdrop Checker</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="container">
+    <h1>🔍 MonDrop Airdrop Checker</h1>
+    <p>Enter your Monad wallet address below:</p>
+    <input type="text" id="walletAddress" placeholder="0x..." />
+    <br />
+    <button id="checkBtn">Check Eligibility</button>
+
+    <div id="result" class="result"></div>
+
+    <footer style="margin-top: 40px; font-size: 14px;">
+      Built by <a href="https://x.com/PrashantKu6350?t=HwgvygW7aaY-PgYQC2R4PQ&s=09" target="_blank">@PrashantKu6350</a>
+    </footer>
+  </div>
+
+  <script type="module" src="script.js"></script>
+</body>
 </html>
