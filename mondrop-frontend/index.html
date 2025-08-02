@@ -1,86 +1,52 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>MonDrop Airdrop Checker</title>
+  <title>MonDrop Eligibility Checker</title>
   <style>
-    body {
-      font-family: Arial, sans-serif;
-      background: #f4f4f4;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      padding: 30px;
-    }
-    h1 {
-      color: #333;
-    }
-    input {
-      padding: 10px;
-      width: 300px;
-      font-size: 16px;
-      margin: 10px 0;
-    }
-    button {
-      padding: 10px 20px;
-      font-size: 16px;
-      cursor: pointer;
-    }
-    #result {
-      margin-top: 20px;
-      background: #fff;
-      padding: 20px;
-      border-radius: 8px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.1);
-      width: 320px;
-      text-align: left;
-    }
+    body { font-family: Arial; text-align: center; margin-top: 50px; }
+    input { padding: 10px; width: 300px; }
+    button { padding: 10px 20px; margin-top: 10px; }
+    .result { margin-top: 20px; font-size: 18px; }
   </style>
 </head>
 <body>
-  <h1>MonDrop Airdrop Checker</h1>
-  <input type="text" id="address" placeholder="Enter your wallet address" />
+  <h1>MonDrop Eligibility Checker</h1>
+  <input type="text" id="wallet" placeholder="Enter your wallet address" />
+  <br />
   <button onclick="checkEligibility()">Check</button>
-
-  <div id="result"></div>
+  
+  <div class="result" id="result"></div>
 
   <script>
     async function checkEligibility() {
-      const address = document.getElementById("address").value.trim();
-      const resultDiv = document.getElementById("result");
-
-      if (!address) {
-        resultDiv.innerHTML = "<p style='color: red;'>Please enter a wallet address.</p>";
-        return;
-      }
-
-      resultDiv.innerHTML = "<p>Checking eligibility...</p>";
+      const address = document.getElementById('wallet').value;
+      const resultDiv = document.getElementById('result');
+      resultDiv.innerText = 'Checking...';
 
       try {
         const response = await fetch("https://mondrop.onrender.com/check-eligibility", {
           method: "POST",
-          headers: {
-            "Content-Type": "application/json"
-          },
+          headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ address })
         });
 
-        if (!response.ok) {
-          throw new Error("Server error");
-        }
+        if (!response.ok) throw new Error("Server error");
 
         const data = await response.json();
 
-        resultDiv.innerHTML = `
-          <p><strong>Address:</strong> ${data.address}</p>
-          <p><strong>Eligibility:</strong> ${data.isEligible ? "✅ Eligible" : "❌ Not Eligible"}</p>
-          <p><strong>Score:</strong> ${data.score}</p>
-          <p><strong>Tier:</strong> ${data.tier}</p>
-          <p><strong>Reason:</strong> ${data.reason}</p>
-        `;
+        if (data.isEligible) {
+          resultDiv.innerHTML = `
+            ✅ <b>Eligible</b><br>
+            Tier: <b>${data.tier}</b><br>
+            Score: ${data.score}<br>
+            Reason: ${data.reason}
+          `;
+        } else {
+          resultDiv.innerHTML = `❌ <b>Not Eligible</b>`;
+        }
       } catch (error) {
-        resultDiv.innerHTML = `<p style="color: red;">Error: ${error.message}</p>`;
+        resultDiv.innerText = "Error checking eligibility.";
+        console.error(error);
       }
     }
   </script>
